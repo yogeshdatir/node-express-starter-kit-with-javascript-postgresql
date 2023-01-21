@@ -1,5 +1,6 @@
 const { pool } = require("../db");
 
+// * HTTP methods: https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods
 // * HTTP codes: https://www.w3.org/Protocols/HTTP/HTRESP.html
 // * Postgresql Error codes: https://www.postgresql.org/docs/current/errcodes-appendix.html
 // async-await pattern for get callback argument
@@ -30,11 +31,11 @@ const userController = {
     }
   },
   deleteUser: async (req, res) => {
-    const { name } = req.body;
+    const { id } = req.body;
     try {
       const result = await pool.query(
-        "DELETE FROM users WHERE name=$1 RETURNING *",
-        [name]
+        "DELETE FROM users WHERE id=$1 RETURNING *",
+        [id]
       );
       res.status(200).send({ data: result.rows });
     } catch (err) {
@@ -44,11 +45,11 @@ const userController = {
   },
 
   updateUser: async (req, res) => {
-    const { name, email } = req.body;
+    const { id, name, email } = req.body;
     try {
       const result = await pool.query(
-        "UPDATE users SET email = $1 WHERE name = $2 RETURNING *",
-        [email, name]
+        "UPDATE users SET name = $1, email = $2 WHERE id = $3 RETURNING *",
+        [name, email, id]
       );
       res.status(200).send({ data: result.rows });
     } catch (err) {
